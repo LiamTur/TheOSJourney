@@ -45,6 +45,8 @@ SECTIONS
 	{
 		*(COMMON)
 		*(.bss)
+		. = ALIGN(4K);
+		end = .; /* OBS move down if new things are to be added so I wont malloc any preloaded data */
 	}
 
 	/* The compiler may produce other sections, by default it will put them in
