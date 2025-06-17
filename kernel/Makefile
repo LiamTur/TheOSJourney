@@ -32,6 +32,8 @@ $(KERNEL_ARCH_OBJS) \
 kernel/kernel.o \
 thread/thread.o \
 km/kmalloc.o \
+$(ARCHDIR)/context_switch.o \
+$(ARCHDIR)/start_thread.o \
 
 OBJS=\
 $(ARCHDIR)/crti.o \

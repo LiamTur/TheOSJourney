@@ -9,20 +9,43 @@
 #error "This tutorial needs to be compiled with a ix86-elf compiler"
 #endif
 
-// Your thread function
-void thread_func1(void) {
+void thread_ping(void) {
     while (1) {
-        terminal_writestring("Thread 1 lives!\n");
-        for (volatile int i = 0; i < 1000000; i++); // crude delay
+        terminal_writestring("ping\n");
+        thread_yield();
     }
 }
 
-// Create thread and call function directly (for now)
-void test_thread_create(void) {
-    thread_t *t = thread_create(thread_func1);
-    // For now, just call the function directly
-    t->entry();
+void thread_pong(void) {
+    while (1) {
+        terminal_writestring("pong\n");
+        thread_yield();
+    }
 }
+
+void thread_main(void) {
+    while (1) {
+        thread_yield();
+    }
+}
+
+
+void kernel_main2(void) {
+    thread_init(thread_main); // This calls thread_create and sets up main thread from wich I can spawn new ones and keep track on current thread
+
+    thread_t *ping = thread_create(thread_ping);
+    thread_add(ping);
+
+    thread_t *pong = thread_create(thread_pong);
+    thread_add(pong);
+
+    // Start running threads here and hope to GOD I see ducking ping pong
+    while (1) {
+        thread_yield();
+    }
+}
+
+
 
 
 void kernel_main(void) 
@@ -33,6 +56,6 @@ void kernel_main(void)
 	print_color_palette();
 	terminal_writestring("works");
 	terminal_writestring("works2!");
-	test_thread_create();
+	kernel_main2();
 	
 }
