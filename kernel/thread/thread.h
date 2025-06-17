@@ -11,7 +11,8 @@ typedef enum {
 } thread_state_t;
 
 typedef struct thread {
-    uint32_t *stack_ptr;          // Saved stack pointer
+    uint32_t *stack_ptr;          // Saved stack pointer (ESP)
+    uint32_t *base_ptr; 	  // Saved base pointer (EBP)
     int id;
     thread_state_t state;
     void (*entry)(void);
@@ -20,8 +21,10 @@ typedef struct thread {
 
 // API
 thread_t *thread_create(void (*entry)(void));
-//void thread_init();
-//void thread_yield();
-
+void thread_add(thread_t *t);
+void thread_init(void (*main_entry)(void));
+void thread_yield(void);
+thread_t *thread_get_current(void);
+thread_t *thread_get_list(void);
 #endif
 
