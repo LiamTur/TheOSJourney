@@ -1,5 +1,6 @@
 #include <stdint.h>
-#include "io.h"
+#include "../io.h"
+#include "pic.h"
 
 #define PIC1            0x20
 #define PIC2            0xA0
@@ -11,6 +12,10 @@
 #define ICW1_INIT       0x10
 #define ICW1_ICW4       0x01
 #define ICW4_8086       0x01
+
+#define PIC1_COMMAND 0x20
+#define PIC2_COMMAND 0xA0
+#define PIC_EOI      0x20
 
 void pic_remap(int offset1, int offset2) {
     uint8_t a1 = inb(PIC1_DATA);
@@ -28,4 +33,8 @@ void pic_remap(int offset1, int offset2) {
     outb(PIC1_DATA, a1);
     outb(PIC2_DATA, a2);
 }
-
+void pic_send_eoi(uint8_t irq) {
+    if (irq >= 8)
+        outb(PIC2_COMMAND, PIC_EOI);
+    outb(PIC1_COMMAND, PIC_EOI);
+}
